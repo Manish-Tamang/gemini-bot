@@ -3,14 +3,20 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 
+// Define a type for the message
+type Message = {
+  sender: string;
+  text: string;
+};
+
 export default function Home() {
   const [question, setQuestion] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [generatingAnswer, setGeneratingAnswer] = useState(false);
 
   useEffect(() => {
     const savedMessages = localStorage.getItem("chatMessages");
-    const parsedMessages = savedMessages ? JSON.parse(savedMessages) : [];
+    const parsedMessages: Message[] = savedMessages ? JSON.parse(savedMessages) : [];
     setMessages(parsedMessages);
   }, []);
 
@@ -21,7 +27,7 @@ export default function Home() {
   async function generateAnswer(e: React.FormEvent<HTMLFormElement>) {
     setGeneratingAnswer(true);
     e.preventDefault();
-    const newMessage = { sender: "user", text: question };
+    const newMessage: Message = { sender: "user", text: question };
     setMessages((prev) => [...prev, newMessage]);
     setQuestion("");
 
@@ -34,14 +40,14 @@ export default function Home() {
         },
       });
 
-      const botMessage = {
+      const botMessage: Message = {
         sender: "bot",
         text: response.data.candidates[0].content.parts[0].text,
       };
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       console.log(error);
-      const errorMessage = {
+      const errorMessage: Message = {
         sender: "bot",
         text: "Sorry - Something went wrong. Please try again!",
       };
