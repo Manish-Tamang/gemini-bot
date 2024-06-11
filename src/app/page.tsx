@@ -20,7 +20,7 @@ export default function Home() {
     localStorage.setItem("chatMessages", JSON.stringify(messages));
   }, [messages]);
 
-  async function generateAnswer(e) {
+  async function generateAnswer(e: React.FormEvent<HTMLFormElement>) {
     setGeneratingAnswer(true);
     e.preventDefault();
     const newMessage = { sender: "user", text: question };
