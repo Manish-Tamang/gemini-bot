@@ -11,9 +11,9 @@ export default function Home() {
   const [generatingAnswer, setGeneratingAnswer] = useState(false);
 
   useEffect(() => {
-    const savedMessages =
-      JSON.parse(localStorage.getItem("chatMessages")) || [];
-    setMessages(savedMessages);
+    const savedMessages = localStorage.getItem("chatMessages");
+    const parsedMessages = savedMessages ? JSON.parse(savedMessages) : [];
+    setMessages(parsedMessages);
   }, []);
 
   useEffect(() => {
