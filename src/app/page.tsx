@@ -2,22 +2,15 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-
-interface Message {
-  sender: string;
-  text: string;
-}
 
 export default function Home() {
-  const [question, setQuestion] = useState<string>("");
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [generatingAnswer, setGeneratingAnswer] = useState<boolean>(false);
+  const [question, setQuestion] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [generatingAnswer, setGeneratingAnswer] = useState(false);
 
   useEffect(() => {
     const savedMessages = localStorage.getItem("chatMessages");
-    const parsedMessages: Message[] = savedMessages ? JSON.parse(savedMessages) : [];
+    const parsedMessages = savedMessages ? JSON.parse(savedMessages) : [];
     setMessages(parsedMessages);
   }, []);
 
@@ -28,7 +21,7 @@ export default function Home() {
   async function generateAnswer(e: React.FormEvent<HTMLFormElement>) {
     setGeneratingAnswer(true);
     e.preventDefault();
-    const newMessage: Message = { sender: "user", text: question };
+    const newMessage = { sender: "user", text: question };
     setMessages((prev) => [...prev, newMessage]);
     setQuestion("");
 
@@ -41,14 +34,14 @@ export default function Home() {
         },
       });
 
-      const botMessage: Message = {
+      const botMessage = {
         sender: "bot",
         text: response.data.candidates[0].content.parts[0].text,
       };
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       console.log(error);
-      const errorMessage: Message = {
+      const errorMessage = {
         sender: "bot",
         text: "Sorry - Something went wrong. Please try again!",
       };
@@ -98,23 +91,21 @@ export default function Home() {
           onSubmit={generateAnswer}
           className="flex items-center gap-2 p-4 bg-gray-100 dark:bg-gray-900"
         >
-          <Input
+          <input
             type="text"
             placeholder="Type your message..."
-            className="flex-1 bg-transparent"
+            className="flex-1 bg-transparent p-2 border rounded-md"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             disabled={generatingAnswer}
           />
-          <Button
+          <button
             type="submit"
-            variant="ghost"
-            size="icon"
-            className="text-blue-500"
+            className="text-blue-500 p-2 border rounded-md"
             disabled={generatingAnswer}
           >
             Send
-          </Button>
+          </button>
         </form>
       </div>
     </div>
